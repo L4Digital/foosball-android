@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2018 L4 Digital. All rights reserved.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<layout xmlns:tools="http://schemas.android.com/tools"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        tools:ignore="ContentDescription">
+
+    <data>
+
+        <import type="com.l4digital.foosball.R" />
+
+        <import type="com.l4digital.foosball.game.TableSide" />
+
+        <import type="android.view.View" />
+
+        <variable
+            name="leftRoundsWon"
+            type="int" />
+
+        <variable
+            name="rightRoundsWon"
+            type="int" />
+
+        <variable
+            name="leftColor"
+            type="int" />
+
+        <variable
+            name="rightColor"
+            type="int" />
+
+        <variable
+            name="gameInProgress"
+            type="boolean"/>
+
+        <variable
+            name="gameViewModel"
+            type="com.l4digital.foosball.game.GameViewModel" />
+
+        <variable
+            name="selectionViewModel"
+            type="com.l4digital.foosball.game.selection.PlayerSelectionViewModel" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/center_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/left_rounds_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            android:background="@drawable/rounds_bg"
+            android:gravity="center"
+            android:paddingStart="@dimen/large_padding"
+            android:paddingEnd="@dimen/large_padding"
+            android:visibility="@{gameInProgress}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/right_rounds_layout"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:roundsWon="@{leftRoundsWon}"
+            app:roundsColor="@{leftColor}">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:layout_width="@dimen/round_icon_width"
+                android:layout_height="match_parent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_round"
+                android:layout_margin="@dimen/standard_padding" />
+
+            <android.support.v7.widget.AppCompatImageView
+                android:layout_width="@dimen/round_icon_width"
+                android:layout_height="match_parent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_round"
+                android:layout_margin="@dimen/standard_padding" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/right_rounds_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            android:background="@drawable/rounds_bg"
+            android:gravity="center"
+            android:paddingStart="@dimen/large_padding"
+            android:paddingEnd="@dimen/large_padding"
+            android:visibility="@{gameInProgress}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/left_rounds_layout"
+            app:roundsWon="@{rightRoundsWon}"
+            app:roundsColor="@{rightColor}">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:layout_width="@dimen/round_icon_width"
+                android:layout_height="match_parent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_round"
+                android:layout_margin="@dimen/standard_padding" />
+
+            <android.support.v7.widget.AppCompatImageView
+                android:layout_width="@dimen/round_icon_width"
+                android:layout_height="match_parent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_round"
+                android:layout_margin="@dimen/standard_padding" />
+
+        </LinearLayout>
+
+        <TextClock
+            android:id="@+id/text_clock"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:gravity="center"
+            android:textSize="@dimen/extra_large_text"
+            android:fontFamily="@{R.font.vitesse}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/left_rounds_layout"
+            tools:text="12:00" />
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/table_image"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/table"
+            android:scaleType="fitCenter"
+            android:layout_marginBottom="@dimen/large_padding"
+            android:visibility="@{gameInProgress}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_clock"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <android.support.v7.widget.AppCompatImageButton
+            android:id="@+id/left_swap_button"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_swap"
+            android:tint="@{leftColor}"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:visibility="@{gameInProgress}"
+            android:onClick="@{() -> gameViewModel.swapPlayers(TableSide.LEFT)}"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="@+id/left_rounds_layout"
+            app:layout_constraintEnd_toEndOf="@+id/left_rounds_layout"
+            app:layout_constraintTop_toTopOf="@+id/table_image"
+            app:layout_constraintBottom_toBottomOf="@+id/table_image"
+            tools:tint="@color/team_a"
+            tools:ignore="ContentDescription" />
+
+        <android.support.v7.widget.AppCompatImageButton
+            android:id="@+id/side_swap_button"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:scaleType="fitCenter"
+            android:rotation="90"
+            app:srcCompat="@drawable/ic_swap"
+            android:tint="@color/no_team"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:visibility="@{gameInProgress}"
+            android:onClick="@{() -> gameViewModel.swapSides()}"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/left_swap_button"
+            app:layout_constraintBottom_toBottomOf="@+id/left_swap_button"
+            tools:ignore="ContentDescription" />
+
+        <android.support.v7.widget.AppCompatImageButton
+            android:id="@+id/right_swap_button"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_swap"
+            android:tint="@{rightColor}"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:visibility="@{gameInProgress}"
+            android:onClick="@{() -> gameViewModel.swapPlayers(TableSide.RIGHT)}"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="@+id/right_rounds_layout"
+            app:layout_constraintEnd_toEndOf="@+id/right_rounds_layout"
+            app:layout_constraintTop_toTopOf="@+id/table_image"
+            app:layout_constraintBottom_toBottomOf="@+id/table_image"
+            tools:tint="@color/team_b"
+            tools:ignore="ContentDescription" />
+
+        <android.support.design.button.MaterialButton
+            android:id="@+id/start_game_button"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/game_button_height"
+            android:textSize="@dimen/medium_text"
+            android:gravity="center"
+            android:text="@string/start_game"
+            android:fontFamily="@font/vitesse"
+            android:textAllCaps="true"
+            android:enabled="@{selectionViewModel.readyToStart &amp;&amp; !selectionViewModel.randomizeInProgress}"
+            android:onClick="@{() -> gameViewModel.startGame(selectionViewModel.selectedPlayers)}"
+            android:layout_margin="@dimen/standard_padding"
+            android:visibility="@{gameInProgress ? View.INVISIBLE : View.VISIBLE}"
+            app:backgroundTint="@color/theme_orange"
+            app:cornerRadius="@dimen/button_corner_radius"
+            app:rippleColor="@color/theme_dark_gray"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <android.support.design.button.MaterialButton
+            android:id="@+id/randomize_button"
+            android:animateLayoutChanges="true"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/game_button_height"
+            android:layout_above="@id/start_game_button"
+            android:onClick="@{() -> selectionViewModel.randomize()}"
+            android:enabled="@{selectionViewModel.readyToStart &amp;&amp; !selectionViewModel.randomizeInProgress}"
+            android:textSize="@dimen/medium_text"
+            android:gravity="center"
+            android:text="@string/randomize"
+            android:fontFamily="@font/vitesse"
+            android:textAllCaps="true"
+            android:layout_margin="@dimen/standard_padding"
+            android:visibility="@{gameInProgress ? View.INVISIBLE : View.VISIBLE}"
+            app:backgroundTint="@color/theme_orange"
+            app:cornerRadius="@dimen/button_corner_radius"
+            app:rippleColor="@color/theme_dark_gray"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/start_game_button" />
+
+        <android.support.v7.widget.AppCompatImageButton
+            android:id="@+id/undo_button"
+            android:layout_width="@dimen/undo_button_size"
+            android:layout_height="@dimen/undo_button_size"
+            android:onClick="@{() -> gameViewModel.undo()}"
+            android:scaleType="fitCenter"
+            android:src="@drawable/undo"
+            android:padding="@dimen/standard_padding"
+            android:background="@drawable/selector_round"
+            android:layout_marginBottom="@dimen/standard_padding"
+            android:visibility="@{gameInProgress}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:visibility="gone" />
+    </android.support.constraint.ConstraintLayout>
+</layout>

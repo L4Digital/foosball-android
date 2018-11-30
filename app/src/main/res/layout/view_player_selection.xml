@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2018 L4 Digital. All rights reserved.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:ignore="ContentDescription">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="tableSide"
+            type="com.l4digital.foosball.game.TableSide" />
+
+        <variable
+            name="offensivePlayer"
+            type="com.l4digital.foosball.game.model.Player" />
+
+        <variable
+            name="defensivePlayer"
+            type="com.l4digital.foosball.game.model.Player" />
+
+        <variable
+            name="teamName"
+            type="int" />
+
+        <variable
+            name="selectionViewModel"
+            type="com.l4digital.foosball.game.selection.PlayerSelectionViewModel" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background_gray">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/team_heading"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="@dimen/medium_text"
+            android:text="@{teamName}"
+            android:fontFamily="@font/vitesse"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/team_a" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/player_type_text"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:textSize="@dimen/small_text"
+            android:text="@{selectionViewModel.getSelectionLabel(offensivePlayer, defensivePlayer)}"
+            android:fontFamily="@font/whitney"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/team_heading"
+            tools:text="@string/who_is_offense" />
+
+        <FrameLayout
+            android:id="@+id/offensive_player_icon_container"
+            android:layout_width="@dimen/team_select_player_icon_size"
+            android:layout_height="@dimen/team_select_player_icon_size"
+            android:padding="3dp"
+            android:clickable="@{offensivePlayer != null}"
+            android:onClick="@{() -> selectionViewModel.summonPlayer(offensivePlayer)}"
+            android:background="@drawable/selector_round"
+            android:layout_marginEnd="@dimen/large_padding"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/defensive_player_icon_container"
+            app:layout_constraintTop_toBottomOf="@+id/player_type_text"
+            app:layout_constraintHorizontal_chainStyle="packed">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/offensive_player_icon"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@{selectionViewModel.getPlayerIcon(offensivePlayer)}"
+                tools:src="@tools:sample/avatars" />
+        </FrameLayout>
+
+        <android.support.v7.widget.AppCompatImageButton
+            android:id="@+id/remove_offensive_player_button"
+            android:layout_width="@dimen/remove_player_icon_size"
+            android:layout_height="0dp"
+            android:padding="2dp"
+            android:background="@drawable/selector_round"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_remove"
+            android:tint="@color/delete"
+            android:onClick="@{() -> selectionViewModel.removePlayer(true, tableSide)}"
+            android:visibility="@{offensivePlayer != null}"
+            app:layout_constraintStart_toStartOf="@+id/offensive_player_icon_container"
+            app:layout_constraintTop_toTopOf="@+id/offensive_player_icon_container" />
+
+        <FrameLayout
+            android:id="@+id/defensive_player_icon_container"
+            android:layout_width="@dimen/team_select_player_icon_size"
+            android:layout_height="@dimen/team_select_player_icon_size"
+            android:padding="3dp"
+            android:clickable="@{defensivePlayer != null}"
+            android:onClick="@{() -> selectionViewModel.summonPlayer(defensivePlayer)}"
+            android:background="@drawable/selector_round"
+            app:layout_constraintStart_toEndOf="@+id/offensive_player_icon_container"
+            app:layout_constraintTop_toBottomOf="@+id/player_type_text"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/defensive_player_icon"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@{selectionViewModel.getPlayerIcon(defensivePlayer)}"
+                tools:src="@tools:sample/avatars" />
+        </FrameLayout>
+
+        <android.support.v7.widget.AppCompatImageButton
+            android:id="@+id/remove_defensive_player_button"
+            android:layout_width="@dimen/remove_player_icon_size"
+            android:layout_height="0dp"
+            android:padding="2dp"
+            android:background="@drawable/selector_round"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_remove"
+            android:tint="@color/delete"
+            android:onClick="@{() -> selectionViewModel.removePlayer(false, tableSide)}"
+            android:visibility="@{defensivePlayer != null}"
+            app:layout_constraintStart_toStartOf="@+id/defensive_player_icon_container"
+            app:layout_constraintTop_toTopOf="@+id/defensive_player_icon_container" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recent_players_list"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/standard_padding"
+            android:paddingBottom="@dimen/standard_padding"
+            android:layout_marginTop="@dimen/large_padding"
+            android:requiresFadingEdge="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/offensive_player_icon_container"
+            tools:listitem="@layout/item_player_no_name"
+            tools:layoutManager="android.support.v7.widget.LinearLayoutManager"
+            tools:orientation="horizontal" />
+
+        <View
+            android:id="@+id/section_divider"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@color/divider"
+            android:layout_marginTop="@dimen/standard_padding"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recent_players_list" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/all_players_list"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:requiresFadingEdge="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/section_divider"
+            tools:listitem="@layout/item_player_with_name"
+            tools:itemCount="20" />
+
+    </android.support.constraint.ConstraintLayout>
+
+</layout>

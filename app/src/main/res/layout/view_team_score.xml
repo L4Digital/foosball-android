@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2018 L4 Digital. All rights reserved.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.l4digital.foosball.R" />
+
+        <variable
+            name="gameViewModel"
+            type="com.l4digital.foosball.game.GameViewModel" />
+
+        <variable
+            name="tableSide"
+            type="com.l4digital.foosball.game.TableSide" />
+
+        <variable
+            name="state"
+            type="com.l4digital.foosball.game.ScoreViewState" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/standard_padding">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/score_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/extra_large_text"
+            android:gravity="center"
+            android:text="@{Integer.toString(state.score)}"
+            android:fontFamily="@font/vitesse"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="4" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/top_player_icon"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_margin="@dimen/player_icon_margin"
+            android:src="@{gameViewModel.getPlayerIcon(state.topPlayer)}"
+            android:onClick="@{() -> gameViewModel.scorePoint(state.topPlayer, tableSide, false)}"
+            android:onLongClick="@{() -> gameViewModel.scorePoint(state.topPlayer, tableSide, true)}"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/score_text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:touchTint="@{R.color.theme_orange_translucent}"
+            app:civ_border_width="@dimen/player_icon_border_width"
+            app:civ_border_color="@{state.color}"
+            tools:src="@tools:sample/avatars"
+            tools:civ_border_color="@color/team_b" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/bottom_player_icon"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_margin="@dimen/player_icon_margin"
+            android:src="@{gameViewModel.getPlayerIcon(state.bottomPlayer)}"
+            android:onClick="@{() -> gameViewModel.scorePoint(state.bottomPlayer, tableSide, false)}"
+            android:onLongClick="@{() -> gameViewModel.scorePoint(state.bottomPlayer, tableSide, true)}"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintTop_toBottomOf="@+id/score_text"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:touchTint="@{R.color.theme_orange_translucent}"
+            app:civ_border_width="@dimen/player_icon_border_width"
+            app:civ_border_color="@{state.color}"
+            tools:src="@tools:sample/avatars"
+            tools:civ_border_color="@color/team_b" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/top_player_name"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:minWidth="@dimen/player_name_min_width"
+            android:background="@drawable/nameplate"
+            android:gravity="center"
+            android:textSize="@dimen/medium_text"
+            android:paddingLeft="@dimen/standard_padding"
+            android:paddingRight="@dimen/standard_padding"
+            android:text="@{state.topPlayer.name}"
+            android:fontFamily="@font/vitesse"
+            app:background_tint="@{state.color}"
+            app:layout_constraintEnd_toEndOf="@+id/top_player_icon"
+            app:layout_constraintStart_toStartOf="@+id/top_player_icon"
+            app:layout_constraintBottom_toBottomOf="@+id/top_player_icon"
+            tools:text="@tools:sample/first_names"
+            tools:backgroundTint="@color/team_b" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/bottom_player_name"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:minWidth="@dimen/player_name_min_width"
+            android:background="@drawable/nameplate"
+            android:gravity="center"
+            android:textSize="@dimen/medium_text"
+            android:paddingLeft="@dimen/standard_padding"
+            android:paddingRight="@dimen/standard_padding"
+            android:text="@{state.bottomPlayer.name}"
+            android:fontFamily="@font/vitesse"
+            app:background_tint="@{state.color}"
+            app:layout_constraintEnd_toEndOf="@+id/bottom_player_icon"
+            app:layout_constraintStart_toStartOf="@+id/bottom_player_icon"
+            app:layout_constraintBottom_toBottomOf="@+id/bottom_player_icon"
+            tools:text="@tools:sample/first_names"
+            tools:backgroundTint="@color/team_b" />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>
